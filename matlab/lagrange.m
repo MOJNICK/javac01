@@ -1,12 +1,13 @@
-f=input(’podaj wzor f(x)=’,’s’);
-c=input(’podaj c=’);
-d=input(’podaj d=’);
+%f=input('podaj wzor f(x)=','s');
+%c=input('podaj c=');
+%d=input('podaj d=');
+function y = lagrange(f, c, d)
 %Lagrange polynomials of 4th order
-w1=’(x-.25).*(x-.50).*(x-.75).*(x-1 )/(24/256)’;
-w2=’(x- 0).*(x-.50).*(x-.75).*(x-1 )/(-6/256)’;
-w3=’(x- 0).*(x-.25).*(x-.75).*(x-1 )/(4/256)’;
-w4=’(x- 0).*(x-.25).*(x-.50).*(x-1 )/(-6/256)’;
-w5=’(x- 0).*(x-.25).*(x-.50).*(x-.75)/(24/256)’;
+w1='(x-.25).*(x-.50).*(x-.75).*(x-1 )/(24/256)';
+w2='(x- 0).*(x-.50).*(x-.75).*(x-1 )/(-6/256)';
+w3='(x- 0).*(x-.25).*(x-.75).*(x-1 )/(4/256)';
+w4='(x- 0).*(x-.25).*(x-.50).*(x-1 )/(-6/256)';
+w5='(x- 0).*(x-.25).*(x-.50).*(x-.75)/(24/256)';
 %find values of f(x) at sampling points:
 x=[0:.25:1];
 x=c+(d-c)*x;
@@ -19,9 +20,13 @@ y=a(1).*eval(w1)+a(2).*eval(w2)+a(3).*eval(w3)...
 x=c+(d-c)*x;
 z=eval(f);
 %draw pictures:
-plot(x,y)
-hold on
-plot(x,z,’m’)
+fig=figure('visible','off');
+plot(x,y);
+hold on;
+plot(x,z,'m');
+separator = " ";
+saveas(fig,strcat(num2str(c),separator, num2str(d)),'png');
 %find maximum error
 y=abs(y-z);
-max(y)
+y=max(y)
+end
