@@ -100,14 +100,14 @@ double getSumUnderKernel(double** integralImage, int row, int col, int kernelSiz
 	int ra = row + kernelSize;
 	int ca = col + kernelSize;
 
-	int rb = row - kernelSize;
+	int rb = row - kernelSize - 1;
 	int cb = col + kernelSize;
 
 	int rc = row + kernelSize;
-	int cc = col - kernelSize;
+	int cc = col - kernelSize - 1;
 
-	int rd = row - kernelSize;
-	int cd = col - kernelSize;
+	int rd = row - kernelSize - 1;
+	int cd = col - kernelSize - 1;
 
 	double a = *(integralImage[ra] + ca);
 	double b = *(integralImage[rb] + cb);
@@ -152,9 +152,9 @@ double calcAverage(unsigned char* data, unsigned int length)
 double calcNeighboursAverage(unsigned char** data, int row, int col, int kernelSize)
 {
 	double sum = 0;
-	for (int i = -kernelSize; i < kernelSize; ++i)
+	for (int i = -kernelSize; i <= kernelSize; ++i)
 	{
-		for (int j = -kernelSize; j < kernelSize; ++j)
+		for (int j = -kernelSize; j <= kernelSize; ++j)
 		{
 			sum += data[row + i][col + j];
 		}
@@ -252,14 +252,23 @@ int main(int argc, char **argv)
 	double** integratedImage = integrate_image(a, rows, cols);
 	double** integratedImageOfSquared = createSquareIntegral(a, rows, cols);
 	int RRR = 128; //maxvariance;
-	for (i = kernelSize; i< rows - kernelSize; ++i) {
-		for (j = kernelSize; j< cols - kernelSize; ++j) {
+	for (i = kernelSize+1; i< rows - kernelSize; ++i) {
+		for (j = kernelSize+1; j< cols - kernelSize; ++j) {
 			
-			/*double avg = calcNeighboursAverage(a, i, j, kernelSize);
-			double threshold = avg;*/
+			/*//outAvgNonIntBradley
+			double avg = calcNeighboursAverage(a, i, j, kernelSize);
+			double threshold = 0.95 * avg;*/
+			
+			//outAVGIntegralBradley
 			double avg = getNeighboursAverageFromIntegral(integratedImage, i, j, kernelSize);
-			double threshold = avg;
-			/*
+			double threshold = 0.8 * avg;
+			
+			/*//outAvgIntegralSauvola
+			double avg = getNeighboursAverageFromIntegral(integratedImage, i, j, kernelSize);
+			auto variance = naiveSigma(integratedImage, integratedImageOfSquared, i, j, kernelSize);
+			double threshold = avg * (1+0.1*(((variance/(RRR))-1)));*/
+
+			/*//outAvgNonIntSauvola
 			double avg = getNeighboursAverageFromIntegral(integratedImage, i, j, kernelSize);
 			auto variance = naiveSigma(integratedImage, integratedImageOfSquared, i, j, kernelSize);
 			double threshold = avg * (1+0.1*(((variance/(RRR))-1)));*/
@@ -270,7 +279,7 @@ int main(int argc, char **argv)
 
 	double elapsed = tt.End();	//stop and read elapsed time in ms (miliseconds)
 
-	std::string outfname = "ouTBRADLEY.pgm";
+	std::string outfname = "outAVGIntegralBradley.pgm";
 	//replace(outfname, ".ppm", "_col2gray_simple.pgm");
 
 	if (writePGMB_image(outfname.c_str(), b[0], rows, cols, 255) == 0)	   exit(1);
