@@ -8,6 +8,7 @@
 #include "TPGM.h"
 #include <cmath>
 #include <memory>
+#include <algorithm>
 
 TTiming tt;//klasa do mierzenia czasu wykonywania siê poszczególnych funkcji
 
@@ -22,21 +23,62 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 template <class DataType>
 class Image
 {
-	std::unique_ptr<DataType> data_;
+	using DataPtrType = DataType*;
+	std::unique_ptr<DataType[]> data_;
 	int rows_;
 	int cols_;
 public:
-	Image(DataType* data, int rows, int cols)
-	{
-		data_.reset(data);
-		rows_ = rows;
-		cols_ = cols;
-
-	}
+	Image(DataPtrType data, int rows, int cols) : data_{ data }, rows_{ rows }, cols_{cols} {}
+	Image(std::unique_ptr<DataType[]> data, int rows, int cols) : data_ { std::move(data) }, rows_{ rows }, cols{ cols } {}
+	Image(const Image& img) : rows_{img.rows_}, cols_{img.cols_} { std::copy(img(0), img(rows_, cols_), this->operator()(0)) }
+	DataPtrType operator()(int row) { return data_.get() + row * cols_; }
+	DataPtrType operator()(int row, int col) { return data_.get() + row * cols_ + col; }
 };
 
+Image<char> img(nullptr, 0, 0);
+
+template<typename DataType>
+Image<DataType> replicateBorders(const Image<DataType>& img, const unsigned int borderSize)
+{
+	int newImageRows = rows_ + 2 * borderSize;
+	int newImageCols = cols_ + 2 * borderSize;
+	int newImageDataSize = newImageRows * newImageCols;
+
+	Image<DataType> newImage(new DataType[newImageDataSize], newImageRows, newImageCols);
+
+	//replicate left and right
+	for (int row = 0; row < rows_; ++row)
+	{
+		DataPtrType thisDataRow = this->operator()(row);
+		DataPtrType newImageRow = newImage(row);
+
+		std::reverse_copy(thisDataRow, thisDataRow + borderSize, newImageRow);
+		std::copy(thisDataRow, thisDataRow + cols_, newImageRow + borderSize);
+		std::reverse_copy(thisDataRow + cols_ - borderSize, thisDataRow + cols_, newImageRow);
+	}
+
+	//replicate up
+	const auto first = newImage(borderSize);
+	for (unsigned int i = 0; i < borderSize; ++i)
+	{
+		auto last = newImage(borderSize + borderSize - i);
+		auto d_first = newImage(i);
+		if (first == last) break;
+		for (int col = 0; col < cols_; ++col)
+		{
+			*d_first = *last;
+		}
+	}
+
+	//replicate down
+	return newImage;
+}
+
+
+template Image<char> replicateBorders(const Image<char>&, const unsigned int);
+
 template<typename T>
-double** integrate_image(T** data, int rows, int cols)
+Image<double> integrate_image(Image<T> data, int rows, int cols)
 {
 	double** integrated = new double*[rows];
     integrated[0] = new double[cols*rows];
@@ -45,13 +87,9 @@ double** integrate_image(T** data, int rows, int cols)
 	{
 		integrated[i] = integrated[i - 1] + cols;
 	}
-
-	//memcpy(integrated[0], data[0], rows*cols);
-	//std::copy(data[0], data[0] + rows*cols, integrated[0]);
 	
 	integrated[0][0] = data[0][0];
 
-	//init row0 and col0
 	for (auto row = 1; row < rows; row++)
 	{
 		integrated[row][0] = data[row][0] + integrated[row - 1][0];
@@ -182,29 +220,7 @@ double calcAverage(unsigned char* data, unsigned int length)
 	return avg;
 }
 
-auto addBlackBorders(unsigned char** data, int rows, int cols, int kernelSize)
-{
-	int newImageRows = rows + 2 * kernelSize;
-	int newImageCols = rows + 2 * kernelSize;
-	int newImageDataSize = newImageRows * newImageCols;
-	unsigned char** newImage = new unsigned char*[newImageRows];
-	newImage[0] = new unsigned char[newImageDataSize]();
 
-	for (int i = 1; i < newImageRows; i++)
-		newImage[i] = newImage[i - 1] + newImageCols;
-
-	//copy data to newImage
-	for (int i = 0; i < rows; ++i)
-	{
-		for (int j = 0; j < cols; ++j)
-		{
-			newImage[i + kernelSize][j + kernelSize] = data[i][j];
-		}
-	}
-
-	Image<unsigned char> image(newImage[0], newImageRows, newImageCols);
-	return image;
-}
 
 int main(int argc, char **argv)
 {
