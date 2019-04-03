@@ -21,6 +21,14 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 }
 
 template <class DataType>
+class Row
+{
+	DataType* row_;
+	Row(DataType* row) : row_{ row } {}
+	DataType operator[](int col) { return *(row_ + col); }
+};
+
+template <class DataType>
 class Image
 {
 	using DataPtrType = DataType*;
@@ -28,11 +36,13 @@ class Image
 	int rows_;
 	int cols_;
 public:
-	Image(DataPtrType data, int rows, int cols) : data_{ data }, rows_{ rows }, cols_{cols} {}
-	Image(std::unique_ptr<DataType[]> data, int rows, int cols) : data_ { std::move(data) }, rows_{ rows }, cols{ cols } {}
+	Image(DataType data, int rows, int cols) : data_{ data }, rows_{ rows }, cols_{cols} {}
+	Image(std::unique_ptr<DataType[]> data, int rows, int cols) : data_{ std::move(data) }, rows_{ rows }, cols{ cols } {}
 	Image(const Image& img) : rows_{img.rows_}, cols_{img.cols_} { std::copy(img(0), img(rows_, cols_), this->operator()(0)) }
+	Image(const Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } {}
 	DataPtrType operator()(int row) { return data_.get() + row * cols_; }
 	DataPtrType operator()(int row, int col) { return data_.get() + row * cols_ + col; }
+	Row<DataType> operator[](int row) { return Row<DataType>(this->operator()(row)); }
 };
 
 Image<char> img(nullptr, 0, 0);
@@ -77,22 +87,23 @@ Image<DataType> replicateBorders(const Image<DataType>& img, const unsigned int 
 
 template Image<char> replicateBorders(const Image<char>&, const unsigned int);
 
-template<typename T>
-Image<double> integrate_image(Image<T> data, int rows, int cols)
+template<typename DataType>
+Image<double> integralImage(Image<DataType> data)
 {
-	double** integrated = new double*[rows];
-    integrated[0] = new double[cols*rows];
+	//double** integrated = new double*[rows];
+	Image<double> integrated{ new double[data.cols_ * data.rows_], data.cols_, data.rows_ };
+    //integrated[0] = new double[cols*rows];
 
-	for (auto i = 1; i < rows; ++i)//initialize pointers to pointer
+	/*for (auto i = 1; i < rows; ++i)//initialize pointers to pointer
 	{
 		integrated[i] = integrated[i - 1] + cols;
-	}
+	}*/
 	
 	integrated[0][0] = data[0][0];
 
 	for (auto row = 1; row < rows; row++)
 	{
-		integrated[row][0] = data[row][0] + integrated[row - 1][0];
+		*integrated(row, 0) = data[row][0] + integrated[row - 1][0];
 	}
 
 	for (auto col = 1; col < cols; col++)
@@ -113,6 +124,7 @@ Image<double> integrate_image(Image<T> data, int rows, int cols)
 	}
 	return integrated;
 }
+template Image<double> integralImage(Image<char> data);
 
 double** createSquareIntegral(unsigned char** data, int rows, int cols)
 {
