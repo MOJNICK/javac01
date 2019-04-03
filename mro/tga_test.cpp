@@ -24,8 +24,10 @@ template <class DataType>
 class Row
 {
 	DataType* row_;
+public:
 	Row(DataType* row) : row_{ row } {}
-	DataType operator[](int col) { return *(row_ + col); }
+	DataType& operator[](int col) { return *(row_ + col); }
+	const DataType& operator[](int col) const { return *(row_ + col); }
 };
 
 template <class DataType>
@@ -33,16 +35,21 @@ class Image
 {
 	using DataPtrType = DataType*;
 	std::unique_ptr<DataType[]> data_;
+public:
 	int rows_;
 	int cols_;
 public:
-	Image(DataType data, int rows, int cols) : data_{ data }, rows_{ rows }, cols_{cols} {}
-	Image(std::unique_ptr<DataType[]> data, int rows, int cols) : data_{ std::move(data) }, rows_{ rows }, cols{ cols } {}
-	Image(const Image& img) : rows_{img.rows_}, cols_{img.cols_} { std::copy(img(0), img(rows_, cols_), this->operator()(0)) }
-	Image(const Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } {}
-	DataPtrType operator()(int row) { return data_.get() + row * cols_; }
 	DataPtrType operator()(int row, int col) { return data_.get() + row * cols_ + col; }
-	Row<DataType> operator[](int row) { return Row<DataType>(this->operator()(row)); }
+	const DataPtrType operator()(int row, int col) const { return data_.get() + row * cols_ + col; }
+
+	Image(DataPtrType data, int rows, int cols) : data_{ data }, rows_{ rows }, cols_{cols} {}
+	Image(std::unique_ptr<DataType[]> data, int rows, int cols) : data_{ std::move(data) }, rows_{ rows }, cols{ cols } {}
+	Image(const Image& img) : rows_{ img.rows_ }, cols_{ img.cols_ } { std::copy(img(0,0), img(rows_, cols_), this->operator()(0, 0)); }
+	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } {}
+	//DataPtrType operator()(int row) { return data_.get() + row * cols_; }
+
+	Row<DataType> operator[](int row) { return Row<DataType>(this->operator()(row, 0)); }
+	const Row<DataType> operator[](int row) const { return Row<DataType>(this->operator()(row, 0)); }
 };
 
 Image<char> img(nullptr, 0, 0);
@@ -50,31 +57,31 @@ Image<char> img(nullptr, 0, 0);
 template<typename DataType>
 Image<DataType> replicateBorders(const Image<DataType>& img, const unsigned int borderSize)
 {
-	int newImageRows = rows_ + 2 * borderSize;
-	int newImageCols = cols_ + 2 * borderSize;
+	int newImageRows = img.rows_ + 2 * borderSize;
+	int newImageCols = img.cols_ + 2 * borderSize;
 	int newImageDataSize = newImageRows * newImageCols;
 
 	Image<DataType> newImage(new DataType[newImageDataSize], newImageRows, newImageCols);
 
 	//replicate left and right
-	for (int row = 0; row < rows_; ++row)
+	for (int row = 0; row < img.rows_; ++row)
 	{
-		DataPtrType thisDataRow = this->operator()(row);
-		DataPtrType newImageRow = newImage(row);
+		auto imgRow = img(row, 0);
+		auto newImageRow = newImage(row, 0);
 
-		std::reverse_copy(thisDataRow, thisDataRow + borderSize, newImageRow);
-		std::copy(thisDataRow, thisDataRow + cols_, newImageRow + borderSize);
-		std::reverse_copy(thisDataRow + cols_ - borderSize, thisDataRow + cols_, newImageRow);
+		std::reverse_copy(imgRow, imgRow + borderSize, newImageRow);
+		std::copy(imgRow, imgRow + img.cols_, newImageRow + borderSize);
+		std::reverse_copy(imgRow + img.cols_ - borderSize, imgRow + img.cols_, newImageRow);
 	}
 
 	//replicate up
-	const auto first = newImage(borderSize);
+	const auto first = newImage(borderSize, 0);
 	for (unsigned int i = 0; i < borderSize; ++i)
 	{
-		auto last = newImage(borderSize + borderSize - i);
-		auto d_first = newImage(i);
+		auto last = newImage(borderSize + borderSize - i, 0);
+		auto d_first = newImage(i,0);
 		if (first == last) break;
-		for (int col = 0; col < cols_; ++col)
+		for (int col = 0; col < img.cols_; ++col)
 		{
 			*d_first = *last;
 		}
@@ -88,7 +95,7 @@ Image<DataType> replicateBorders(const Image<DataType>& img, const unsigned int 
 template Image<char> replicateBorders(const Image<char>&, const unsigned int);
 
 template<typename DataType>
-Image<double> integralImage(Image<DataType> data)
+Image<double> integralImage(const Image<DataType>& data)
 {
 	//double** integrated = new double*[rows];
 	Image<double> integrated{ new double[data.cols_ * data.rows_], data.cols_, data.rows_ };
@@ -101,19 +108,19 @@ Image<double> integralImage(Image<DataType> data)
 	
 	integrated[0][0] = data[0][0];
 
-	for (auto row = 1; row < rows; row++)
+	for (auto row = 1; row < integrated.rows_; row++)
 	{
-		*integrated(row, 0) = data[row][0] + integrated[row - 1][0];
+		integrated[row][0] = data[row][0] + integrated[row - 1][0];
 	}
 
-	for (auto col = 1; col < cols; col++)
+	for (auto col = 1; col < integrated.cols_; col++)
 	{
 		integrated[0][col] = data[0][col] + integrated[0][col - 1];
 	}
 
-	for (auto row = 1; row < rows; row++)
+	for (auto row = 1; row < integrated.rows_; row++)
 	{
-		for (auto col = 1; col < cols; col++)
+		for (auto col = 1; col < integrated.cols_; col++)
 		{
 			integrated[row][col] =
 				+data[row][col]
@@ -124,27 +131,27 @@ Image<double> integralImage(Image<DataType> data)
 	}
 	return integrated;
 }
-template Image<double> integralImage(Image<char> data);
+template Image<double> integralImage(const Image<char>& data);
 
-double** createSquareIntegral(unsigned char** data, int rows, int cols)
+Image<double> createSquareIntegral(Image<unsigned char> data)
 {
-	double** squaredData = new double*[rows];
-	squaredData[0] = new double[rows*cols];
+	Image<double> squaredData{ new double[data.rows_ * data.cols_], data.rows_, data.cols_ };
+/*
 	for (auto i = 1; i < rows; ++i)//initialize pointers to pointer
 	{
 		squaredData[i] = squaredData[i - 1] + cols;
 	}
-
-	for (int i = 0; i < rows*cols; i++)
+	*/
+	for (int i = 0; i < squaredData.rows_ * squaredData.cols_; i++)
 	{
 		squaredData[0][i] = data[0][i] * data[0][i];
 	}
 
-	auto integrateOfSquared = integrate_image(squaredData, rows, cols);
+	auto integrateOfSquared = integralImage(squaredData);
 	return integrateOfSquared;
 }
 
-double getSumUnderKernel(double** integralImage, int row, int col, int kernelSize)
+double getSumUnderKernel(const Image<double>& integralImage, int row, int col, int kernelSize)
 {
 	//navigate to down right
 	int ra = row + kernelSize;
@@ -159,15 +166,15 @@ double getSumUnderKernel(double** integralImage, int row, int col, int kernelSiz
 	int rd = row - kernelSize - 1;
 	int cd = col - kernelSize - 1;
 
-	double a = *(integralImage[ra] + ca);
-	double b = *(integralImage[rb] + cb);
-	double c = *(integralImage[rc] + cc);
-	double d = *(integralImage[rd] + cd);
+	double a = integralImage[ra][ca];
+	double b = integralImage[rb][cb];
+	double c = integralImage[rc][cc];
+	double d = integralImage[rd][cd];
 	double result = a - b - c + d;
 	return result;
 }
 
-double calcNeighboursAverage(unsigned char** data, int row, int col, int kernelSize)
+double calcNeighboursAverage(const Image<unsigned char>& data, int row, int col, int kernelSize)
 {
 	double sum = 0;
 	for (int i = -kernelSize; i <= kernelSize; ++i)
@@ -181,7 +188,7 @@ double calcNeighboursAverage(unsigned char** data, int row, int col, int kernelS
 	return avg;
 }
 
-double slowSigma(unsigned char** data, int row, int col, int kernelSize, double* avg)
+double slowSigma(const Image<unsigned char>& data, int row, int col, int kernelSize, double* avg)
 {
 	*avg = calcNeighboursAverage(data, row, col, kernelSize);
 	
@@ -200,7 +207,7 @@ double slowSigma(unsigned char** data, int row, int col, int kernelSize, double*
 	return sigma;
 }
 
-double naiveSigma(double** integralImage, double** integralImageOfSquared, int row, int col, int kernelSize)
+double naiveSigma(const Image<double> integralImage, const Image<double> integralImageOfSquared, int row, int col, int kernelSize)
 {
 	double variance = 0;
 	double kernelArea = (2 * kernelSize + 1)*(2 * kernelSize + 1);
@@ -213,7 +220,7 @@ double naiveSigma(double** integralImage, double** integralImageOfSquared, int r
 	return sigma;
 }
 
-double getNeighboursAverageFromIntegral(double** integralImage, int row, int col, int kernelSize)
+double getNeighboursAverageFromIntegral(const Image<double> integralImage, int row, int col, int kernelSize)
 {
 	double result = getSumUnderKernel(integralImage, row, col, kernelSize);
 	result /= ((2 * kernelSize + 1)*(2 * kernelSize + 1));
@@ -281,6 +288,7 @@ int main(int argc, char **argv)
 		}
 	}
 
+	Image<unsigned char> input{a[0], rows, cols};
 
 	//przygotowanie czarno-bialej tablicy wyjsciowej
 	unsigned char **b = new unsigned char*[rows];
@@ -288,14 +296,16 @@ int main(int argc, char **argv)
 	for (int i = 1; i < rows; i++)
 		b[i] = b[i - 1] + cols;
 
+	Image<unsigned char> output{ b[0], rows, cols };
+
 	tt.Begin();		//start to measure the time
 
 					//auto avg = calcAverage(a[0], rows*cols);//128;
 	const int kernelSize = 7;
 	//calcNeighboursAverage(unsigned char** data, int row, int col, int kernelSize)
 	//a = addBlackBorders(a, rows, cols, kernelSize).data;
-	double** integratedImage = integrate_image(a, rows, cols);
-	double** integratedImageOfSquared = createSquareIntegral(a, rows, cols);
+	Image<double> integratedImage = integralImage(input);
+	Image<double> integratedImageOfSquared = createSquareIntegral(input);
 	int RRR = 128; //maxvariance;
 	for (i = kernelSize+1; i< rows - kernelSize; ++i) {
 		for (j = kernelSize+1; j< cols - kernelSize; ++j) {
@@ -315,7 +325,7 @@ int main(int argc, char **argv)
 
 			//outAvgNonIntSauvola
 			double avg;// = calcNeighboursAverage(a, i, j, kernelSize);
-			auto sigma = slowSigma(a, i, j, kernelSize, &avg);
+			auto sigma = slowSigma(input, i, j, kernelSize, &avg);
 			double threshold = avg * (1+0.1*(((sigma/(RRR))-1)));
 
 			b[i][j] = (a[i][j] > threshold) ? 255 : 0;
