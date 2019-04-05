@@ -9,6 +9,8 @@
 #include <cmath>
 #include <memory>
 #include <algorithm>
+#include <iostream>
+#include <utility>
 
 TTiming tt;//klasa do mierzenia czasu wykonywania siê poszczególnych funkcji
 
@@ -21,42 +23,52 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 }
 
 template <class DataType>
-class Row
-{
-	DataType* row_;
-public:
-	Row(DataType* row) : row_{ row } {}
-	DataType& operator[](int col) { return *(row_ + col); }
-	const DataType& operator[](int col) const { return *(row_ + col); }
-};
-
-template <class DataType>
 class Image
 {
 public:
 	int rows_;
 	int cols_;
+	int dummy;
 private:
 	std::unique_ptr<DataType[]> data_;
 public:
 	using DataPtrType = DataType*;
 
-	Image(DataPtrType data, int rows, int cols) : data_{ data }, rows_{ rows }, cols_{cols} {}
-	Image(std::unique_ptr<DataType[]> data, int rows, int cols) : data_{ std::move(data) }, rows_{ rows }, cols{ cols } {}
-	Image(const Image& img) : data_{ new DataType[rows_ * cols_] }, rows_{ img.rows_ }, cols_{ img.cols_ }
+	Image(int rows, int cols) : data_{ new DataType[rows * cols] }, rows_{ rows }, cols_{cols} {}
+	Image(const Image& img) : data_{ new DataType[img.rows_ * img.cols_] }, rows_{ img.rows_ }, cols_{ img.cols_ }
 	{
+		std::cout << "cp";
 		std::copy(
-			img.getDataPtr(),
-			img(rows_, cols_),
-			this->getDataPtr());//gdzies podczas kopiowania wyskakuje bug
+			img.cbegin(),
+			img.cend(),
+			this->begin());
 	}
 
-	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } {}
+	operator Image<double>()
+	{
+		std::cout << "conversion1";
+		Image<double> result{ this->rows_, this->cols_ };
+		std::copy(
+			this->cbegin(),
+			this->cend(),
+			result.begin());
+		return result;
+	}
 
+	/*template<typename T>
+	Image( T&& img) : data_{ new DataType[img.rows_ * img.cols_] }, rows_{ img.rows_ }, cols_{ img.cols_ }, dummy{img.rows_ * img.cols_}
+	{
+		std::cout << "realloc";
+	}*/
+
+	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } { std::cout << "mv"; }
+
+	Image& operator=(const Image&) = delete;
+	Image& operator=(Image&&) = delete;
 	DataPtrType operator()(int row, int col) { return data_.get() + row * cols_ + col; }
 	const DataPtrType operator()(int row, int col) const { return data_.get() + row * cols_ + col; }
-	Row<DataType> operator[](int row) { return Row<DataType>(this->operator()(row, 0)); }
-	const Row<DataType> operator[](int row) const { return Row<DataType>(this->operator()(row, 0)); }
+	DataPtrType operator[](int row) { return (this->operator()(row, 0)); }
+	const DataPtrType operator[](int row) const { return (this->operator()(row, 0)); }
 
 	DataPtrType getDataPtr() { return data_.get(); };
 	const DataPtrType getDataPtr() const { return data_.get(); };
@@ -67,16 +79,13 @@ public:
 	const DataPtrType cend() const { return data_.get() + rows_ * cols_; }
 };
 
-Image<char> img(nullptr, 0, 0);
-
 template<typename DataType>
 Image<DataType> replicateBorders(const Image<DataType>& img, const unsigned int borderSize)
 {
 	int newImageRows = img.rows_ + 2 * borderSize;
 	int newImageCols = img.cols_ + 2 * borderSize;
-	int newImageDataSize = newImageRows * newImageCols;
 
-	Image<DataType> newImage(new DataType[newImageDataSize], newImageRows, newImageCols);
+	Image<DataType> newImage( newImageRows, newImageCols);
 
 	//replicate left and right
 	for (int row = 0; row < img.rows_; ++row)
@@ -109,17 +118,10 @@ Image<DataType> replicateBorders(const Image<DataType>& img, const unsigned int 
 
 template Image<char> replicateBorders(const Image<char>&, const unsigned int);
 
-template<typename DataType>
-Image<double> integralImage(const Image<DataType>& data)
+template<typename T>
+Image<double> integralImage(T&& data)
 {
-	//double** integrated = new double*[rows];
-	Image<double> integrated{ new double[data.cols_ * data.rows_], data.rows_, data.cols_ };
-    //integrated[0] = new double[cols*rows];
-
-	/*for (auto i = 1; i < rows; ++i)//initialize pointers to pointer
-	{
-		integrated[i] = integrated[i - 1] + cols;
-	}*/
+	Image<double> integrated( std::forward<T>(data) );
 	
 	integrated[0][0] = data[0][0];
 
@@ -146,16 +148,14 @@ Image<double> integralImage(const Image<DataType>& data)
 	}
 	return integrated;
 }
-template Image<double> integralImage(const Image<char>& data);
 
 Image<double> createSquareIntegral(const Image<unsigned char>& integral)
 {
-	Image<double> squaredData{ new double[integral.rows_ * integral.cols_], integral.rows_, integral.cols_ };
+	Image<double> squaredData{ integral.rows_, integral.cols_ };
 
-	auto dataPtr = squaredData.getDataPtr();
 	std::transform(integral.cbegin(), integral.cend(), squaredData.begin(), [](unsigned char& val) { return val * val; });
 	
-	auto integrateOfSquared = integralImage(squaredData);
+	auto integrateOfSquared = integralImage(std::move(squaredData));
 	return integrateOfSquared;
 }
 
@@ -259,30 +259,16 @@ int main(int argc, char **argv)
 
 	if ((hpos = readPPMB_header(infname.c_str(), &rows, &cols, &max_color)) <= 0)	   exit(1);
 
-	unsigned char **R = new unsigned char*[rows];
-	R[0] = new unsigned char[rows*cols];
-	for (int i = 1; i < rows; i++)
-		R[i] = R[i - 1] + cols;
+	Image<unsigned char> R{ rows, cols };
+	Image<unsigned char> G{ rows, cols };
+	Image<unsigned char> B{ rows, cols };
 
-	unsigned char **G = new unsigned char*[rows];
-	G[0] = new unsigned char[rows*cols];
-	for (int i = 1; i < rows; i++)
-		G[i] = G[i - 1] + cols;
-
-	unsigned char **B = new unsigned char*[rows];
-	B[0] = new unsigned char[rows*cols];
-	for (int i = 1; i < rows; i++)
-		B[i] = B[i - 1] + cols;
-
-	if (readPPMB_data(R[0], G[0], B[0], infname.c_str(), hpos, rows, cols, max_color) == 0)	   exit(1);
+	if (readPPMB_data(R.getDataPtr(), G.getDataPtr(), B.getDataPtr(), infname.c_str(), hpos, rows, cols, max_color) == 0)	   exit(1);
 
 	//zamiana obrazu kolorowego na skalê szaroœci
 
 	//przzygotowanie obrazu grayscale
-	unsigned char **a = new unsigned char*[rows];
-	a[0] = new unsigned char[rows*cols];
-	for (int i = 1; i < rows; i++)
-		a[i] = a[i - 1] + cols;
+	Image<unsigned char> input{ rows, cols };
 
 	unsigned char _r, _g, _b, gray_value;
 
@@ -292,19 +278,11 @@ int main(int argc, char **argv)
 			_g = G[i][j];
 			_b = B[i][j];
 			gray_value = unsigned char((0.299 * _r) + (0.587 * _g) + (0.114 * _b));
-			a[i][j] = gray_value;
+			input[i][j] = gray_value;
 		}
 	}
 
-	Image<unsigned char> input{a[0], rows, cols};
-
-	//przygotowanie czarno-bialej tablicy wyjsciowej
-	unsigned char **b = new unsigned char*[rows];
-	b[0] = new unsigned char[rows*cols];
-	for (int i = 1; i < rows; i++)
-		b[i] = b[i - 1] + cols;
-
-	Image<unsigned char> output{ b[0], rows, cols };
+	Image<unsigned char> output{ rows, cols };
 
 	tt.Begin();		//start to measure the time
 
@@ -349,12 +327,6 @@ int main(int argc, char **argv)
 	//replace(outfname, ".ppm", "_col2gray_simple.pgm");
 
 	if (writePGMB_image(outfname.c_str(), output.getDataPtr(), rows, cols, 255) == 0)	   exit(1);
-
-	delete[] R[0]; delete[] R;
-	delete[] G[0]; delete[] G;
-	delete[] B[0]; delete[] B;
-	delete[] a[0]; delete[] a;
-	delete[] b[0]; delete[] b;
 
 	printf("czas binaryzacji : %f ms", elapsed);
 	getchar();
