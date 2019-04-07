@@ -1,17 +1,10 @@
 ﻿#include "stdafx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <string>
-
 #include "Ttiming.h"
 #include "TPGM.h"
-#include <cmath>
 #include <memory>
 #include <algorithm>
-#include <iostream>
-#include <utility>
-#include <type_traits>
+
 
 TTiming tt;//klasa do mierzenia czasu wykonywania siê poszczególnych funkcji
 
@@ -22,15 +15,6 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 	str.replace(start_pos, from.length(), to);
 	return true;
 }
-
-template<class T>
-class Image;
-
-template<class T>
-struct is_image : std::false_type {};
-
-template<class T>
-struct is_image<Image<T>> : std::true_type {};
 
 template <class DataType>
 class Image
@@ -43,21 +27,20 @@ private:
 public:
 	using DataPtrType = DataType*;
 
-	Image(unsigned int rows, unsigned int cols) : data_{ new DataType[rows * cols] }, rows_{ rows }, cols_{cols} { std::cout << "cons_"; }
+	Image(unsigned int rows, unsigned int cols) : data_{ new DataType[rows * cols] }, rows_{ rows }, cols_{cols} {}
 	template<class T>
 	Image(const Image<T>& img) : data_{ new DataType[img.rows_ * img.cols_] }, rows_{ img.rows_ }, cols_{ img.cols_ }
 	{
-		std::cout << "cp_";
 		std::copy(
 			img.cbegin(),
 			img.cend(),
 			this->begin());
 	}
 
-	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } { std::cout << "mv_"; }
+	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } { }
 
 	Image& operator=(const Image& img) = delete;
-	Image& operator=(Image&& img) { data_ = std::move(img.data_); rows_ = img.rows_; cols_ = img.cols_; std::cout << "mv="; return *this; }
+	Image& operator=(Image&& img) { data_ = std::move(img.data_); rows_ = img.rows_; cols_ = img.cols_; return *this; }
 	DataPtrType operator()(int row, int col) { return this->getDataPtr() + row * cols_ + col; }
 	const DataPtrType operator()(int row, int col) const { return this->getDataPtr() + row * cols_ + col; }
 	DataPtrType operator[](int row) { return (this->operator()(row, 0)); }
@@ -155,7 +138,12 @@ Image<double> createSquareIntegral(const Image<unsigned char>& integral)
 
 double getSumUnderKernel(const Image<double>& integralImage, unsigned row, unsigned col, unsigned kernelSize)
 {
-	//navigate to down right
+	/*
+	  d . . b
+	  . v v v
+	  . v v v
+	  c v v a
+	*/
 	int ra = row + kernelSize;
 	int ca = col + kernelSize;
 
