@@ -26,7 +26,6 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 template<class T>
 class Image;
 
-
 template<class T>
 struct is_image : std::false_type {};
 
@@ -67,10 +66,10 @@ public:
 	DataPtrType getDataPtr() { return data_.get(); };
 	const DataPtrType getDataPtr() const { return data_.get(); };
 	
-	DataPtrType begin() { return data_.getDataPtr(); }
-	DataPtrType end() { return data_.getDataPtr() + rows_ * cols_; }
-	const DataPtrType cbegin() const { return data_.getDataPtr(); }
-	const DataPtrType cend() const { return data_.getDataPtr() + rows_ * cols_; }
+	DataPtrType begin() { return this->getDataPtr(); }
+	DataPtrType end() { return this->.getDataPtr() + rows_ * cols_; }
+	const DataPtrType cbegin() const { return this->getDataPtr(); }
+	const DataPtrType cend() const { return this->getDataPtr() + rows_ * cols_; }
 
 	void replicateBorders(const unsigned int borderSize)
 	{
@@ -310,7 +309,7 @@ int main(int argc, char **argv)
 	if (readPPMB_data(R.getDataPtr(), G.getDataPtr(), B.getDataPtr(), infname.c_str(), hpos, rows, cols, max_color) == 0)	   exit(1);
 
 	//przzygotowanie obrazu grayscale
-	const unsigned kernelSize = 7;
+	const unsigned kernelSize = 13;
 	Image<unsigned char> input{ rows + 2*kernelSize, cols + 2*kernelSize };
 
 	unsigned char _r, _g, _b, gray_value;
