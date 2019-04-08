@@ -32,6 +32,7 @@ enrich - kolorki dla 1, 2, 3
 refine - czestosc
 interesuje blad w normie h1 (logarytm)
 
+1A
 bialy
 -.1856E+00
 refine
@@ -71,10 +72,27 @@ refine
 refine
 0.1076E-04    log10=-.4968E+01
 
+1B
+white
+0.6698E-01    log10=-.1174E+01
+0.6059E-01    log10=-.1218E+01
+0.5545E-01    log10=-.1256E+01
+0.5111E-01    log10=-.1292E+01
+0.4729E-01    log10=-.1325E+01
+0.4388E-01    log10=-.1358E+01
+
+yellow
+0.4014E-01    log10=-.1396E+01
+0.3680E-01    log10=-.1434E+01
+0.3392E-01    log10=-.1470E+01
+0.3139E-01    log10=-.1503E+01
+0.2913E-01    log10=-.1536E+01
+0.2708E-01    log10=-.1567E+01
+
+orange
 
 
 
-
-
+data2d dla przykladu C
 
 
