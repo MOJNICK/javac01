@@ -1,17 +1,10 @@
 ﻿#include "stdafx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <string>
-
 #include "Ttiming.h"
 #include "TPGM.h"
-#include <cmath>
 #include <memory>
 #include <algorithm>
-#include <iostream>
-#include <utility>
-#include <type_traits>
+
 
 TTiming tt;//klasa do mierzenia czasu wykonywania siê poszczególnych funkcji
 
@@ -22,16 +15,6 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 	str.replace(start_pos, from.length(), to);
 	return true;
 }
-
-template<class T>
-class Image;
-
-
-template<class T>
-struct is_image : std::false_type {};
-
-template<class T>
-struct is_image<Image<T>> : std::true_type {};
 
 template <class DataType>
 class Image
@@ -44,33 +27,32 @@ private:
 public:
 	using DataPtrType = DataType*;
 
-	Image(unsigned int rows, unsigned int cols) : data_{ new DataType[rows * cols] }, rows_{ rows }, cols_{cols} { std::cout << "cons_"; }
+	Image(unsigned int rows, unsigned int cols) : data_{ new DataType[rows * cols] }, rows_{ rows }, cols_{cols} {}
 	template<class T>
 	Image(const Image<T>& img) : data_{ new DataType[img.rows_ * img.cols_] }, rows_{ img.rows_ }, cols_{ img.cols_ }
 	{
-		std::cout << "cp_";
 		std::copy(
 			img.cbegin(),
 			img.cend(),
 			this->begin());
 	}
 
-	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } { std::cout << "mv_"; }
+	Image(Image&& img) : data_{ std::move(img.data_) }, rows_{ img.rows_ }, cols_{ img.cols_ } { }
 
-	Image& operator=(const Image&) = delete;
-	Image& operator=(Image&&) = delete;
-	DataPtrType operator()(int row, int col) { return data_.get() + row * cols_ + col; }
-	const DataPtrType operator()(int row, int col) const { return data_.get() + row * cols_ + col; }
+	Image& operator=(const Image& img) = delete;
+	Image& operator=(Image&& img) { data_ = std::move(img.data_); rows_ = img.rows_; cols_ = img.cols_; return *this; }
+	DataPtrType operator()(int row, int col) { return this->getDataPtr() + row * cols_ + col; }
+	const DataPtrType operator()(int row, int col) const { return this->getDataPtr() + row * cols_ + col; }
 	DataPtrType operator[](int row) { return (this->operator()(row, 0)); }
 	const DataPtrType operator[](int row) const { return (this->operator()(row, 0)); }
 
 	DataPtrType getDataPtr() { return data_.get(); };
 	const DataPtrType getDataPtr() const { return data_.get(); };
 	
-	DataPtrType begin() { return data_.get(); }
-	DataPtrType end() { return data_.get() + rows_ * cols_; }
-	const DataPtrType cbegin() const { return data_.get(); }
-	const DataPtrType cend() const { return data_.get() + rows_ * cols_; }
+	DataPtrType begin() { return this->getDataPtr(); }
+	DataPtrType end() { return this->.getDataPtr() + rows_ * cols_; }
+	const DataPtrType cbegin() const { return this->getDataPtr(); }
+	const DataPtrType cend() const { return this->getDataPtr() + rows_ * cols_; }
 
 	void replicateBorders(const unsigned int borderSize)
 	{
@@ -154,9 +136,14 @@ Image<double> createSquareIntegral(const Image<unsigned char>& integral)
 	return integrateOfSquared;
 }
 
-double getSumUnderKernel(const Image<double>& integralImage, int row, int col, int kernelSize)
+double getSumUnderKernel(const Image<double>& integralImage, unsigned row, unsigned col, unsigned kernelSize)
 {
-	//navigate to down right
+	/*
+	  d . . b
+	  . v v v
+	  . v v v
+	  c v v a
+	*/
 	int ra = row + kernelSize;
 	int ca = col + kernelSize;
 
@@ -177,7 +164,7 @@ double getSumUnderKernel(const Image<double>& integralImage, int row, int col, i
 	return result;
 }
 
-double calcNeighboursAverage(const Image<unsigned char>& data, int row, int col, int kernelSize)
+double calcNeighboursAverage(const Image<unsigned char>& data, unsigned row, unsigned col, int kernelSize)
 {
 	double sum = 0;
 	for (int i = -kernelSize; i <= kernelSize; ++i)
@@ -191,7 +178,7 @@ double calcNeighboursAverage(const Image<unsigned char>& data, int row, int col,
 	return avg;
 }
 
-double slowSigma(const Image<unsigned char>& data, int row, int col, int kernelSize, double& avg)
+double slowSigma(const Image<unsigned char>& data, unsigned row, unsigned col, int kernelSize, double& avg)
 {
 	avg = calcNeighboursAverage(data, row, col, kernelSize);
 	
@@ -210,7 +197,7 @@ double slowSigma(const Image<unsigned char>& data, int row, int col, int kernelS
 	return sigma;
 }
 
-double naiveSigma(const Image<double>& integralImage, const Image<double>& integralImageOfSquared, int row, int col, int kernelSize)
+double naiveSigma(const Image<double>& integralImage, const Image<double>& integralImageOfSquared, unsigned row, unsigned col, int kernelSize)
 {
 	double variance = 0;
 	double kernelArea = (2 * kernelSize + 1)*(2 * kernelSize + 1);
@@ -223,12 +210,28 @@ double naiveSigma(const Image<double>& integralImage, const Image<double>& integ
 	return sigma;
 }
 
-double getNeighboursAverageFromIntegral(const Image<double>& integralImage, int row, int col, int kernelSize)
+double getNeighboursAverageFromIntegral(const Image<double>& integralImage, unsigned row, unsigned col, unsigned kernelSize)
 {
 	double result = getSumUnderKernel(integralImage, row, col, kernelSize);
 	result /= ((2 * kernelSize + 1)*(2 * kernelSize + 1));
 
 	return result;
+}
+
+template<class In, class Out>
+void sauvolaNonIntegral(const Image<In>& input, unsigned kernelSize, Image<Out>& output)
+{
+	int RRR = 128; //maxvariance;
+
+	for (unsigned i = kernelSize; i < input.rows_ - kernelSize; ++i) {
+		for (unsigned j = kernelSize; j < input.cols_ - kernelSize; ++j) {
+			double avg;
+			auto sigma = slowSigma(input, i, j, kernelSize, avg);
+			double threshold = avg * (1 + 0.1*(((sigma / (RRR)) - 1)));
+
+			output[i][j] = (input[i][j] > threshold) ? 255 : 0;
+		}
+	}
 }
 
 template<class In, class Out>
@@ -267,27 +270,11 @@ void bradleyIntegral(const Image<In>& input, unsigned kernelSize, Image<Out>& ou
 template<class In, class Out>
 void bradleyNonIntegral(const Image<In>& input, unsigned kernelSize, Image<Out>& output)
 {
-	for (unsigned i = kernelSize + 1; i < input.rows_ - kernelSize; ++i) {
-		for (unsigned j = kernelSize + 1; j < input.cols_ - kernelSize; ++j) {
+	for (unsigned i = kernelSize; i < input.rows_ - kernelSize; ++i) {
+		for (unsigned j = kernelSize; j < input.cols_ - kernelSize; ++j) {
 			double avg = calcNeighboursAverage(input, i, j, kernelSize);
-			double threshold = 0.95 * avg;
+			double threshold = 0.8 * avg;
 
-			output[i][j] = (input[i][j] > threshold) ? 255 : 0;
-		}
-	}
-}
-
-template<class In, class Out>
-void sauvolaNonIntegral(const Image<In>& input, unsigned kernelSize, Image<Out>& output)
-{
-	int RRR = 128; //maxvariance;
-
-	for (unsigned i = kernelSize + 1; i < input.rows_ - kernelSize; ++i) {
-		for (unsigned j = kernelSize + 1; j < input.cols_ - kernelSize; ++j) {
-			double avg;
-			auto sigma = slowSigma(input, i, j, kernelSize, avg);
-			double threshold = avg * (1+0.1*(((sigma/(RRR))-1)));
-			
 			output[i][j] = (input[i][j] > threshold) ? 255 : 0;
 		}
 	}
@@ -310,7 +297,7 @@ int main(int argc, char **argv)
 	if (readPPMB_data(R.getDataPtr(), G.getDataPtr(), B.getDataPtr(), infname.c_str(), hpos, rows, cols, max_color) == 0)	   exit(1);
 
 	//przzygotowanie obrazu grayscale
-	const unsigned kernelSize = 7;
+	const unsigned kernelSize = 13;
 	Image<unsigned char> input{ rows + 2*kernelSize, cols + 2*kernelSize };
 
 	unsigned char _r, _g, _b, gray_value;
@@ -332,16 +319,28 @@ int main(int argc, char **argv)
 	
 	tt.Begin();		//start to measure the time
 	
-	bradleyNonIntegral(input, kernelSize, output);
-
-	double elapsed = tt.End();	//stop and read elapsed time in ms (miliseconds)
-	printf("czas binaryzacji : %f ms", elapsed);
-
-	std::string outfname = "2outAvgNonIntSauvola.pgm";
-
+	std::string outfname = "sauvolaIntegral.pgm";
+	sauvolaIntegral(input, kernelSize, output);
 	auto cropped{ output.cropp(kernelSize) };
 	if (writePGMB_image(outfname.c_str(), cropped.getDataPtr(), cropped.rows_, cropped.cols_, 255) == 0)	   exit(1);
 
+	outfname = "sauvolaNonIntegral.pgm";
+	sauvolaNonIntegral(input, kernelSize, output);
+	cropped = output.cropp(kernelSize);
+	if (writePGMB_image(outfname.c_str(), cropped.getDataPtr(), cropped.rows_, cropped.cols_, 255) == 0)	   exit(1);
+
+	outfname = "bradleyIntegral.pgm";
+	bradleyIntegral(input, kernelSize, output);
+	cropped = output.cropp(kernelSize);
+	if (writePGMB_image(outfname.c_str(), cropped.getDataPtr(), cropped.rows_, cropped.cols_, 255) == 0)	   exit(1);
+
+	outfname = "bradleyNonIntegral.pgm";
+	bradleyNonIntegral(input, kernelSize, output);
+	cropped = output.cropp(kernelSize);
+	if (writePGMB_image(outfname.c_str(), cropped.getDataPtr(), cropped.rows_, cropped.cols_, 255) == 0)	   exit(1);
+
+	double elapsed = tt.End();	//stop and read elapsed time in ms (miliseconds)
+	printf("czas binaryzacji : %f ms", elapsed);
 
 	getchar();
 
