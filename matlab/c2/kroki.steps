@@ -1,0 +1,98 @@
+rozdrabnianie powtorz 5 razy w pkt1
+i zanotuj błąd - kilka linijek
+enrich,global,order=7; erest-estymacja bledu
+ustawianie parametrow: ./decks/deck.com # to komentarz, arcustangens odkomentowany
+kolejne zadanie singularity
+deck 
+solve
+profile=1
+plot
+end quit
+
+cd data 2D
+a.out
+deck
+plot
+plot
+entich,global,order=2
+refine,global
+plot
+end
+solve
+twodim
+tridim
+
+
+logarytm z normy h1 |u-un|1
+log10 stopni spowody
+
+wchodzimy do mesh, refine, znowu roziwazujemy powtor 5 razy
+
+enrich - kolorki dla 1, 2, 3
+refine - czestosc
+interesuje blad w normie h1 (logarytm)
+
+1A
+bialy
+-.1856E+00
+refine
+0.4373E+00    log10=-.3592E+00
+refine
+0.1956E+00    log10=-.7086E+00
+refine
+0.1013E+00    log10=-.9946E+00
+refine
+0.5083E-01    log10=-.1294E+01
+refine
+0.2544E-01    log10=-.1594E+01
+
+zolty
+0.5865E+00    log10=-.2318E+00
+refine
+0.7240E-01    log10=-.1140E+01
+refine
+0.3474E-01    log10=-.1459E+01
+refine,global
+0.8120E-02    log10=-.2090E+01
+refine
+0.2049E-02    log10=-.2688E+01
+refine
+0.5134E-03    log10=-.3290E+01
+
+orange
+0.2117E+00    log10=-.6742E+00
+refine,global
+0.4223E-01    log10=-.1374E+01
+refine
+0.3541E-02    log10=-.2451E+01
+refine
+0.6768E-03    log10=-.3170E+01
+refine
+0.8573E-04    log10=-.4067E+01
+refine
+0.1076E-04    log10=-.4968E+01
+
+1B
+white
+0.6698E-01    log10=-.1174E+01
+0.6059E-01    log10=-.1218E+01
+0.5545E-01    log10=-.1256E+01
+0.5111E-01    log10=-.1292E+01
+0.4729E-01    log10=-.1325E+01
+0.4388E-01    log10=-.1358E+01
+
+yellow
+0.4014E-01    log10=-.1396E+01
+0.3680E-01    log10=-.1434E+01
+0.3392E-01    log10=-.1470E+01
+0.3139E-01    log10=-.1503E+01
+0.2913E-01    log10=-.1536E+01
+0.2708E-01    log10=-.1567E+01
+
+orange
+
+
+
+data2d dla przykladu C
+
+
