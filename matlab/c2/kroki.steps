@@ -136,4 +136,3 @@ orange
 data2d dla przykladu C
 
 4 zadanie data_1D/decks/deck.com , zakomentuj 2 od góry (to jest ostatni #ArcusTangens), a.out; deck; solve; profile=one; plot; errest; mesh; enrch,global,order=2, solve, mesh; enrich global,order=3; solve errest
-
