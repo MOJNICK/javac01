@@ -1,0 +1,523 @@
+a.p=1
+errest 
+ TOTAL NDOF=    11    log10=0.1041E+01
+ TOTAL ERRORS:
+ L2:    0.1194E+00    log10=-.9229E+00
+ H1:    0.6522E+00    log10=-.1856E+00
+ MAX:   0.7299E+00    log10=-.1367E+00
+
+a.p=1 iteracja2
+errest 
+ TOTAL NDOF=    21    log10=0.1322E+01
+ TOTAL ERRORS:
+ L2:    0.2192E-01    log10=-.1659E+01
+ H1:    0.4373E+00    log10=-.3592E+00
+ MAX:   0.1946E+00    log10=-.7108E+00
+
+a.p=1 iteracja3
+errest 
+ TOTAL NDOF=    41    log10=0.1613E+01
+ TOTAL ERRORS:
+ L2:    0.1421E-02    log10=-.2847E+01
+ H1:    0.1956E+00    log10=-.7086E+00
+ MAX:   0.1995E-01    log10=-.1700E+01
+
+iteracja4
+errest 
+ TOTAL NDOF=    81    log10=0.1908E+01
+ TOTAL ERRORS:
+ L2:    0.3623E-03    log10=-.3441E+01
+ H1:    0.1013E+00    log10=-.9946E+00
+ MAX:   0.4880E-02    log10=-.2312E+01
+
+ ADAPTP............................p mesh adaptation
+errest 
+ TOTAL NDOF=   161    log10=0.2207E+01
+ TOTAL ERRORS:
+ L2:    0.9140E-04    log10=-.4039E+01
+ H1:    0.5083E-01    log10=-.1294E+01
+ MAX:   0.1240E-02    log10=-.2907E+01
+
+
+
+p2 ==========================
+errest 
+ TOTAL NDOF=    21    log10=0.1322E+01
+ TOTAL ERRORS:
+ L2:    0.6662E-01    log10=-.1176E+01
+ H1:    0.5865E+00    log10=-.2318E+00
+ MAX:   0.5046E+00    log10=-.2971E+00
+
+ errest 
+ TOTAL NDOF=    41    log10=0.1613E+01
+ TOTAL ERRORS:
+ L2:    0.1337E-02    log10=-.2874E+01
+ H1:    0.7240E-01    log10=-.1140E+01
+ MAX:   0.1789E-01    log10=-.1747E+01
+
+errest 
+ TOTAL NDOF=    81    log10=0.1908E+01
+ TOTAL ERRORS:
+ L2:    0.1161E-03    log10=-.3935E+01
+ H1:    0.3474E-01    log10=-.1459E+01
+ MAX:   0.3128E-02    log10=-.2505E+01
+
+errest 
+ TOTAL NDOF=   161    log10=0.2207E+01
+ TOTAL ERRORS:
+ L2:    0.1307E-04    log10=-.4884E+01
+ H1:    0.8120E-02    log10=-.2090E+01
+ MAX:   0.3747E-03    log10=-.3426E+01
+
+errest 
+ TOTAL NDOF=   321    log10=0.2507E+01
+ TOTAL ERRORS:
+ L2:    0.1652E-05    log10=-.5782E+01
+ H1:    0.2049E-02    log10=-.2688E+01
+ MAX:   0.4891E-04    log10=-.4311E+01
+
+ p3==========
+
+  TOTAL NDOF=    31    log10=0.1491E+01
+ TOTAL ERRORS:
+ L2:    0.2469E-01    log10=-.1608E+01
+ H1:    0.2117E+00    log10=-.6742E+00
+ MAX:   0.1739E+00    log10=-.7598E+00
+
+TOTAL NDOF=    61    log10=0.1785E+01
+ TOTAL ERRORS:
+ L2:    0.2078E-03    log10=-.3682E+01
+ H1:    0.4223E-01    log10=-.1374E+01
+ MAX:   0.4409E-02    log10=-.2356E+01
+
+ TOTAL NDOF=   121    log10=0.2083E+01
+ TOTAL ERRORS:
+ L2:    0.8199E-05    log10=-.5086E+01
+ H1:    0.3541E-02    log10=-.2451E+01
+ MAX:   0.1867E-03    log10=-.3729E+01
+
+ TOTAL NDOF=   241    log10=0.2382E+01
+ TOTAL ERRORS:
+ L2:    0.7134E-06    log10=-.6147E+01
+ H1:    0.6768E-03    log10=-.3170E+01
+ MAX:   0.1840E-04    log10=-.4735E+01
+
+ TOTAL NDOF=   481    log10=0.2682E+01
+ TOTAL ERRORS:
+ L2:    0.4537E-07    log10=-.7343E+01
+ H1:    0.8573E-04    log10=-.4067E+01
+ MAX:   0.1198E-05    log10=-.5921E+01
+=======================================================================
+
+B) u(x) = x^alpha
+
+errest 
+ TOTAL NDOF=    11    log10=0.1041E+01
+ TOTAL ERRORS:
+ L2:    0.4084E-02    log10=-.2389E+01
+ H1:    0.7052E-01    log10=-.1152E+01
+ MAX:   0.3752E-01    log10=-.1426E+01
+
+ TOTAL NDOF=    21    log10=0.1322E+01
+ TOTAL ERRORS:
+ L2:    0.1923E-02    log10=-.2716E+01
+ H1:    0.6231E-01    log10=-.1205E+01
+ MAX:   0.2417E-01    log10=-.1617E+01
+
+ TOTAL NDOF=    41    log10=0.1613E+01
+ TOTAL ERRORS:
+ L2:    0.9242E-03    log10=-.3034E+01
+ H1:    0.5558E-01    log10=-.1255E+01
+ MAX:   0.1555E-01    log10=-.1808E+01
+
+ TOTAL NDOF=    81    log10=0.1908E+01
+ TOTAL ERRORS:
+ L2:    0.4591E-03    log10=-.3338E+01
+ H1:    0.4981E-01    log10=-.1303E+01
+ MAX:   0.9999E-02    log10=-.2000E+01
+
+ TOTAL NDOF=   161    log10=0.2207E+01
+ TOTAL ERRORS:
+ L2:    0.2391E-03    log10=-.3621E+01
+ H1:    0.4475E-01    log10=-.1349E+01
+ MAX:   0.6423E-02    log10=-.2192E+01
+
+=============================
+ TOTAL NDOF=    21    log10=0.1322E+01
+ TOTAL ERRORS:
+ L2:    0.1281E-02    log10=-.2892E+01
+ H1:    0.4015E-01    log10=-.1396E+01
+ MAX:   0.1761E-01    log10=-.1754E+01
+
+  TOTAL NDOF=    41    log10=0.1613E+01
+ TOTAL ERRORS:
+ L2:    0.6385E-03    log10=-.3195E+01
+ H1:    0.3591E-01    log10=-.1445E+01
+ MAX:   0.1135E-01    log10=-.1945E+01
+
+ TOTAL NDOF=    81    log10=0.1908E+01
+ TOTAL ERRORS:
+ L2:    0.3409E-03    log10=-.3467E+01
+ H1:    0.3219E-01    log10=-.1492E+01
+ MAX:   0.7303E-02    log10=-.2137E+01
+
+TOTAL NDOF=   161    log10=0.2207E+01
+ TOTAL ERRORS:
+ L2:    0.1940E-03    log10=-.3712E+01
+ H1:    0.2891E-01    log10=-.1539E+01
+ MAX:   0.4694E-02    log10=-.2329E+01
+
+ TOTAL NDOF=   321    log10=0.2507E+01
+ TOTAL ERRORS:
+ L2:    0.1157E-03    log10=-.3936E+01
+ H1:    0.2600E-01    log10=-.1585E+01
+ MAX:   0.3014E-02    log10=-.2521E+01
+
+=============================
+ TOTAL NDOF=    31    log10=0.1491E+01
+ TOTAL ERRORS:
+ L2:    0.7220E-03    log10=-.3141E+01
+ H1:    0.3264E-01    log10=-.1486E+01
+ MAX:   0.1055E-01    log10=-.1977E+01
+
+ TOTAL NDOF=    61    log10=0.1785E+01
+ TOTAL ERRORS:
+ L2:    0.3873E-03    log10=-.3412E+01
+ H1:    0.2920E-01    log10=-.1535E+01
+ MAX:   0.6796E-02    log10=-.2168E+01
+
+ TOTAL NDOF=   121    log10=0.2083E+01
+ TOTAL ERRORS:
+ L2:    0.2204E-03    log10=-.3657E+01
+ H1:    0.2619E-01    log10=-.1582E+01
+ MAX:   0.4372E-02    log10=-.2359E+01
+
+  TOTAL NDOF=   241    log10=0.2382E+01
+ TOTAL ERRORS:
+ L2:    0.1313E-03    log10=-.3882E+01
+ H1:    0.2354E-01    log10=-.1628E+01
+ MAX:   0.2809E-02    log10=-.2551E+01
+
+ TOTAL NDOF=   481    log10=0.2682E+01
+ TOTAL ERRORS:
+ L2:    0.8060E-04    log10=-.4094E+01
+ H1:    0.2118E-01    log10=-.1674E+01
+ MAX:   0.1803E-02    log10=-.2744E+01
+============================================
+
+C) order=1
+
+ TOTAL NDOF=    81    log10=0.1908E+01
+ TOTAL ERRORS:
+ L2:    0.6988E+00    log10=-.1557E+00
+ H1:    0.7238E+01    log10=0.8596E+00
+ MAX:   0.1938E+01    log10=0.2873E+00
+
+ TOTAL NDOF=   289    log10=0.2461E+01
+ TOTAL ERRORS:
+ L2:    0.6992E-01    log10=-.1155E+01
+ H1:    0.4085E+01    log10=0.6112E+00
+ MAX:   0.3858E+00    log10=-.4136E+00
+
+ TOTAL NDOF=  1089    log10=0.3037E+01
+ TOTAL ERRORS:
+ L2:    0.1699E-01    log10=-.1770E+01
+ H1:    0.2294E+01    log10=0.3605E+00
+ MAX:   0.1013E+00    log10=-.9946E+00
+
+ TOTAL NDOF=  4225    log10=0.3626E+01
+ TOTAL ERRORS:
+ L2:    0.4479E-02    log10=-.2349E+01
+ H1:    0.1186E+01    log10=0.7400E-01
+ MAX:   0.2786E-01    log10=-.1555E+01
+
+order=2
+ TOTAL NDOF=   289    log10=0.2461E+01
+ TOTAL ERRORS:
+ L2:    0.2355E+00    log10=-.6279E+00
+ H1:    0.4961E+01    log10=0.6955E+00
+ MAX:   0.1067E+01    log10=0.2801E-01
+ TOTAL NDOF=  1089    log10=0.3037E+01
+ TOTAL ERRORS:
+ L2:    0.1740E-01    log10=-.1759E+01
+ H1:    0.1873E+01    log10=0.2725E+00
+ MAX:   0.1696E+00    log10=-.7707E+00
+ TOTAL NDOF=  4225    log10=0.3626E+01
+ TOTAL ERRORS:
+ L2:    0.2160E-02    log10=-.2665E+01
+ H1:    0.6191E+00    log10=-.2082E+00
+ MAX:   0.3040E-01    log10=-.1517E+01
+ TOTAL NDOF= 16641    log10=0.4221E+01
+ TOTAL ERRORS:
+ L2:    0.3281E-03    log10=-.3484E+01
+ H1:    0.1717E+00    log10=-.7653E+00
+ MAX:   0.4688E-02    log10=-.2329E+01
+
+ order=3
+ TOTAL NDOF=   625    log10=0.2796E+01
+ TOTAL ERRORS:
+ L2:    0.1112E+00    log10=-.9539E+00
+ H1:    0.3148E+01    log10=0.4981E+00
+ MAX:   0.4982E+00    log10=-.3026E+00
+ TOTAL NDOF=  2401    log10=0.3380E+01
+ TOTAL ERRORS:
+ L2:    0.4326E-02    log10=-.2364E+01
+ H1:    0.8888E+00    log10=-.5118E-01
+ MAX:   0.5220E-01    log10=-.1282E+01
+ TOTAL NDOF=  9409    log10=0.3974E+01
+ TOTAL ERRORS:
+ L2:    0.4335E-03    log10=-.3363E+01
+ H1:    0.1776E+00    log10=-.7507E+00
+ MAX:   0.5637E-02    log10=-.2249E+01
+ TOTAL NDOF= 37249    log10=0.4571E+01
+ TOTAL ERRORS:
+ L2:    0.3378E-04    log10=-.4471E+01
+ H1:    0.2631E-01    log10=-.1580E+01
+ MAX:   0.4628E-03    log10=-.3335E+01
+
+================================================================================================
+zad2
+A) p1
+ TOTAL NDOF=    11    log10=0.1041E+01
+ TOTAL ERRORS:
+ L2:    0.1194E+00    log10=-.9229E+00
+ H1:    0.6522E+00    log10=-.1856E+00
+ MAX:   0.7299E+00    log10=-.1367E+00
+ TOTAL NDOF=    20    log10=0.1301E+01
+ TOTAL ERRORS:
+ L2:    0.2192E-01    log10=-.1659E+01
+ H1:    0.4373E+00    log10=-.3592E+00
+ MAX:   0.1946E+00    log10=-.7109E+00
+ TOTAL NDOF=    29    log10=0.1462E+01
+ TOTAL ERRORS:
+ L2:    0.1427E-02    log10=-.2846E+01
+ H1:    0.1957E+00    log10=-.7084E+00
+ MAX:   0.1995E-01    log10=-.1700E+01
+ TOTAL NDOF=    37    log10=0.1568E+01
+ TOTAL ERRORS:
+ L2:    0.3931E-03    log10=-.3406E+01
+ H1:    0.1025E+00    log10=-.9891E+00
+ MAX:   0.4889E-02    log10=-.2311E+01
+ TOTAL NDOF=    56    log10=0.1748E+01
+ TOTAL ERRORS:
+ L2:    0.1388E-03    log10=-.3857E+01
+ H1:    0.5214E-01    log10=-.1283E+01
+ MAX:   0.1241E-02    log10=-.2906E+01
+
+p2
+ TOTAL NDOF=    21    log10=0.1322E+01
+ TOTAL ERRORS:
+ L2:    0.6662E-01    log10=-.1176E+01
+ H1:    0.5865E+00    log10=-.2318E+00
+ MAX:   0.5046E+00    log10=-.2971E+00
+ TOTAL NDOF=    35    log10=0.1544E+01
+ TOTAL ERRORS:
+ L2:    0.1337E-02    log10=-.2874E+01
+ H1:    0.7240E-01    log10=-.1140E+01
+ MAX:   0.1789E-01    log10=-.1747E+01
+ TOTAL NDOF=    43    log10=0.1633E+01
+ TOTAL ERRORS:
+ L2:    0.1200E-03    log10=-.3921E+01
+ H1:    0.3503E-01    log10=-.1456E+01
+ MAX:   0.3125E-02    log10=-.2505E+01
+ TOTAL NDOF=    57    log10=0.1756E+01
+ TOTAL ERRORS:
+ L2:    0.2802E-04    log10=-.4553E+01
+ H1:    0.8445E-02    log10=-.2073E+01
+ MAX:   0.4657E-03    log10=-.3332E+01
+ TOTAL NDOF=    91    log10=0.1959E+01
+ TOTAL ERRORS:
+ L2:    0.6322E-05    log10=-.5199E+01
+ H1:    0.2980E-02    log10=-.2526E+01
+ MAX:   0.1155E-03    log10=-.3938E+01
+
+p3
+ TOTAL NDOF=    31    log10=0.1491E+01
+ TOTAL ERRORS:
+ L2:    0.2469E-01    log10=-.1608E+01
+ H1:    0.2117E+00    log10=-.6742E+00
+ MAX:   0.1739E+00    log10=-.7598E+00
+ TOTAL NDOF=    52    log10=0.1716E+01
+ TOTAL ERRORS:
+ L2:    0.2078E-03    log10=-.3682E+01
+ H1:    0.4223E-01    log10=-.1374E+01
+ MAX:   0.4409E-02    log10=-.2356E+01
+ TOTAL NDOF=    58    log10=0.1763E+01
+ TOTAL ERRORS:
+ L2:    0.1899E-04    log10=-.4721E+01
+ H1:    0.5324E-02    log10=-.2274E+01
+ MAX:   0.3332E-03    log10=-.3477E+01
+ TOTAL NDOF=    76    log10=0.1881E+01
+ TOTAL ERRORS:
+ L2:    0.1993E-05    log10=-.5700E+01
+ H1:    0.9998E-03    log10=-.3000E+01
+ MAX:   0.2823E-04    log10=-.4549E+01
+ TOTAL NDOF=   115    log10=0.2061E+01
+ TOTAL ERRORS:
+ L2:    0.3649E-06    log10=-.6438E+01
+ H1:    0.1462E-03    log10=-.3835E+01
+ MAX:   0.5042E-05    log10=-.5297E+01
+==============================================
+ B)
+ p1
+  TOTAL NDOF=    11    log10=0.1041E+01
+ TOTAL ERRORS:
+ L2:    0.4084E-02    log10=-.2389E+01
+ H1:    0.7052E-01    log10=-.1152E+01
+ MAX:   0.3752E-01    log10=-.1426E+01
+ TOTAL NDOF=    18    log10=0.1255E+01
+ TOTAL ERRORS:
+ L2:    0.1940E-02    log10=-.2712E+01
+ H1:    0.6253E-01    log10=-.1204E+01
+ MAX:   0.2417E-01    log10=-.1617E+01
+ TOTAL NDOF=    27    log10=0.1431E+01
+ TOTAL ERRORS:
+ L2:    0.9444E-03    log10=-.3025E+01
+ H1:    0.5586E-01    log10=-.1253E+01
+ MAX:   0.1555E-01    log10=-.1808E+01
+ TOTAL NDOF=    39    log10=0.1591E+01
+ TOTAL ERRORS:
+ L2:    0.4812E-03    log10=-.3318E+01
+ H1:    0.5010E-01    log10=-.1300E+01
+ MAX:   0.9999E-02    log10=-.2000E+01
+ TOTAL NDOF=    55    log10=0.1740E+01
+ TOTAL ERRORS:
+ L2:    0.2600E-03    log10=-.3585E+01
+ H1:    0.4502E-01    log10=-.1347E+01
+ MAX:   0.6423E-02    log10=-.2192E+01
+
+p2
+TOTAL NDOF=    21    log10=0.1322E+01
+ TOTAL ERRORS:
+ L2:    0.1281E-02    log10=-.2892E+01
+ H1:    0.4015E-01    log10=-.1396E+01
+ MAX:   0.1761E-01    log10=-.1754E+01
+ TOTAL NDOF=    25    log10=0.1398E+01
+ TOTAL ERRORS:
+ L2:    0.6400E-03    log10=-.3194E+01
+ H1:    0.3594E-01    log10=-.1444E+01
+ MAX:   0.1135E-01    log10=-.1945E+01
+ TOTAL NDOF=    29    log10=0.1462E+01
+ TOTAL ERRORS:
+ L2:    0.3433E-03    log10=-.3464E+01
+ H1:    0.3225E-01    log10=-.1492E+01
+ MAX:   0.7303E-02    log10=-.2136E+01
+ TOTAL NDOF=    33    log10=0.1519E+01
+ TOTAL ERRORS:
+ L2:    0.1973E-03    log10=-.3705E+01
+ H1:    0.2900E-01    log10=-.1538E+01
+ MAX:   0.4694E-02    log10=-.2328E+01
+ TOTAL NDOF=    37    log10=0.1568E+01
+ TOTAL ERRORS:
+ L2:    0.1200E-03    log10=-.3921E+01
+ H1:    0.2612E-01    log10=-.1583E+01
+ MAX:   0.3014E-02    log10=-.2521E+01
+
+p3
+ TOTAL NDOF=    31    log10=0.1491E+01
+ TOTAL ERRORS:
+ L2:    0.7220E-03    log10=-.3141E+01
+ H1:    0.3264E-01    log10=-.1486E+01
+ MAX:   0.1055E-01    log10=-.1977E+01
+ TOTAL NDOF=    37    log10=0.1568E+01
+ TOTAL ERRORS:
+ L2:    0.3874E-03    log10=-.3412E+01
+ H1:    0.2920E-01    log10=-.1535E+01
+ MAX:   0.6796E-02    log10=-.2168E+01
+ TOTAL NDOF=    43    log10=0.1633E+01
+ TOTAL ERRORS:
+ L2:    0.2204E-03    log10=-.3657E+01
+ H1:    0.2619E-01    log10=-.1582E+01
+ MAX:   0.4372E-02    log10=-.2359E+01
+ TOTAL NDOF=    49    log10=0.1690E+01
+ TOTAL ERRORS:
+ L2:    0.1313E-03    log10=-.3882E+01
+ H1:    0.2354E-01    log10=-.1628E+01
+ MAX:   0.2809E-02    log10=-.2551E+01
+ TOTAL NDOF=    55    log10=0.1740E+01
+ TOTAL ERRORS:
+ L2:    0.8063E-04    log10=-.4093E+01
+ H1:    0.2118E-01    log10=-.1674E+01
+ MAX:   0.1803E-02    log10=-.2744E+01
+
+ C
+ p1
+ TOTAL NDOF=    81    log10=0.1908E+01
+ TOTAL ERRORS:
+ L2:    0.6988E+00    log10=-.1557E+00
+ H1:    0.7238E+01    log10=0.8596E+00
+ MAX:   0.1938E+01    log10=0.2873E+00
+ TOTAL NDOF=   135    log10=0.2130E+01
+ TOTAL ERRORS:
+ L2:    0.7202E-01    log10=-.1143E+01
+ H1:    0.4165E+01    log10=0.6196E+00
+ MAX:   0.4224E+00    log10=-.3743E+00
+ TOTAL NDOF=   202    log10=0.2305E+01
+ TOTAL ERRORS:
+ L2:    0.2884E-01    log10=-.1540E+01
+ H1:    0.2591E+01    log10=0.4135E+00
+ MAX:   0.1923E+00    log10=-.7159E+00
+ TOTAL NDOF=   442    log10=0.2645E+01
+ TOTAL ERRORS:
+ L2:    0.1057E-01    log10=-.1976E+01
+ H1:    0.1511E+01    log10=0.1792E+00
+ MAX:   0.7778E-01    log10=-.1109E+01
+ TOTAL NDOF=  1109    log10=0.3045E+01
+ TOTAL ERRORS:
+ L2:    0.4440E-02    log10=-.2353E+01
+ H1:    0.8704E+00    log10=-.6030E-01
+ MAX:   0.2351E-01    log10=-.1629E+01
+
+ p2
+  TOTAL NDOF=   289    log10=0.2461E+01
+ TOTAL ERRORS:
+ L2:    0.2355E+00    log10=-.6279E+00
+ H1:    0.4961E+01    log10=0.6955E+00
+ MAX:   0.1067E+01    log10=0.2801E-01
+ TOTAL NDOF=   387    log10=0.2588E+01
+ TOTAL ERRORS:
+ L2:    0.2321E-01    log10=-.1634E+01
+ H1:    0.2081E+01    log10=0.3182E+00
+ MAX:   0.2079E+00    log10=-.6820E+00
+ TOTAL NDOF=   707    log10=0.2849E+01
+ TOTAL ERRORS:
+ L2:    0.5660E-02    log10=-.2247E+01
+ H1:    0.8511E+00    log10=-.7000E-01
+ MAX:   0.4630E-01    log10=-.1334E+01
+ TOTAL NDOF=  1375    log10=0.3138E+01
+ TOTAL ERRORS:
+ L2:    0.1605E-02    log10=-.2794E+01
+ H1:    0.3584E+00    log10=-.4456E+00
+ MAX:   0.2122E-01    log10=-.1673E+01
+ TOTAL NDOF=  2993    log10=0.3476E+01
+ TOTAL ERRORS:
+ L2:    0.4866E-03    log10=-.3313E+01
+ H1:    0.1416E+00    log10=-.8488E+00
+ MAX:   0.4138E-02    log10=-.2383E+01
+
+ p3
+ TOTAL NDOF=   625    log10=0.2796E+01
+ TOTAL ERRORS:
+ L2:    0.1112E+00    log10=-.9539E+00
+ H1:    0.3148E+01    log10=0.4981E+00
+ MAX:   0.4982E+00    log10=-.3026E+00
+ TOTAL NDOF=   808    log10=0.2907E+01
+ TOTAL ERRORS:
+ L2:    0.1949E-01    log10=-.1710E+01
+ H1:    0.1078E+01    log10=0.3274E-01
+ MAX:   0.1651E+00    log10=-.7824E+00
+ TOTAL NDOF=  1426    log10=0.3154E+01
+ TOTAL ERRORS:
+ L2:    0.2701E-02    log10=-.2568E+01
+ H1:    0.3560E+00    log10=-.4485E+00
+ MAX:   0.4730E-01    log10=-.1325E+01
+ TOTAL NDOF=  2743    log10=0.3438E+01
+ TOTAL ERRORS:
+ L2:    0.3568E-03    log10=-.3448E+01
+ H1:    0.1187E+00    log10=-.9257E+00
+ MAX:   0.5531E-02    log10=-.2257E+01
+ TOTAL NDOF=  4885    log10=0.3689E+01
+ TOTAL ERRORS:
+ L2:    0.9163E-04    log10=-.4038E+01
+ H1:    0.3409E-01    log10=-.1467E+01
+ MAX:   0.1397E-02    log10=-.2855E+01
